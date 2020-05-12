@@ -430,6 +430,7 @@ uint16_t max_display_update_time = 0;
   bool lcd_clicked, wait_for_unclick;
   volatile uint8_t buttons;
   millis_t next_button_update_ms;
+  #define NEXT_BUTTON_WAIT_MS 200
   #if ENABLED(REPRAPWORLD_KEYPAD)
     volatile uint8_t buttons_reprapworld_keypad;
   #endif
@@ -797,7 +798,7 @@ void lcd_quick_feedback(const bool clear_buttons) {
   #if ENABLED(ULTIPANEL)
     lcd_refresh();
     if (clear_buttons) buttons = 0;
-    next_button_update_ms = millis() + 500;
+    next_button_update_ms = millis() + NEXT_BUTTON_WAIT_MS;
   #else
     UNUSED(clear_buttons);
   #endif
@@ -4900,7 +4901,7 @@ void lcd_quick_feedback(const bool clear_buttons) {
   #if ENABLED(ADC_KEYPAD)
 
     inline bool handle_adc_keypad() {
-      #define ADC_MIN_KEY_DELAY 100
+      #define ADC_MIN_KEY_DELAY (NEXT_BUTTON_WAIT_MS / 2)
       if (buttons_reprapworld_keypad) {
         lcdDrawUpdate = LCDVIEW_REDRAW_NOW;
         if (encoderDirection == -1) { // side effect which signals we are inside a menu
@@ -5613,25 +5614,25 @@ void lcd_reset_alert_level() { lcd_status_message_level = 0; }
           #if BUTTON_EXISTS(UP)
             else if (BUTTON_PRESSED(UP)) {
               encoderDiff = -(ENCODER_UD_STEPS);
-              next_button_update_ms = now + 300;
+              next_button_update_ms = now + NEXT_BUTTON_WAIT_MS;
             }
           #endif
           #if BUTTON_EXISTS(DWN)
             else if (BUTTON_PRESSED(DWN)) {
               encoderDiff = ENCODER_UD_STEPS;
-              next_button_update_ms = now + 300;
+              next_button_update_ms = now + NEXT_BUTTON_WAIT_MS;
             }
           #endif
           #if BUTTON_EXISTS(LFT)
             else if (BUTTON_PRESSED(LFT)) {
               encoderDiff = -(ENCODER_LR_PULSES);
-              next_button_update_ms = now + 300;
+              next_button_update_ms = now + NEXT_BUTTON_WAIT_MS;
             }
           #endif
           #if BUTTON_EXISTS(RT)
             else if (BUTTON_PRESSED(RT)) {
               encoderDiff = ENCODER_LR_PULSES;
-              next_button_update_ms = now + 300;
+              next_button_update_ms = now + NEXT_BUTTON_WAIT_MS;
             }
           #endif
 
